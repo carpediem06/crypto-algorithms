@@ -17,6 +17,12 @@
 #include <string.h>
 #include "sha256.h"
 
+
+#define C_RED    "\033[31m"
+#define C_GREEN  "\033[32m"
+#define C_YELLOW "\033[33m"
+#define C_OFF    "\033[0m"
+
 /*********************** FUNCTION DEFINITIONS ***********************/
 int sha256_test()
 {
@@ -31,31 +37,48 @@ int sha256_test()
 	                                 0xf1,0x80,0x9a,0x48,0xa4,0x97,0x20,0x0e,0x04,0x6d,0x39,0xcc,0xc7,0x11,0x2c,0xd0};
 	BYTE buf[SHA256_BLOCK_SIZE];
 	SHA256_CTX ctx;
-	int idx;
-	int pass = 1;
+	int i;
+	int passed = 1;
+	int nb = 1;
 
+  printf("[TEST %d]\ninput : %s", nb++, text1);
 	sha256_init(&ctx);
 	sha256_update(&ctx, text1, strlen(text1));
 	sha256_final(&ctx, buf);
-	pass = pass && !memcmp(hash1, buf, SHA256_BLOCK_SIZE);
-
+	passed = passed && !memcmp(hash1, buf, SHA256_BLOCK_SIZE);
+	printf("\noutput: ");
+	for(i = 0; i < SHA256_BLOCK_SIZE; i++)
+    printf("%02X", *(buf + i));
+  printf("\n");
+  //--
+  printf("[TEST %d]\ninput : %s", nb++, text2);
 	sha256_init(&ctx);
 	sha256_update(&ctx, text2, strlen(text2));
 	sha256_final(&ctx, buf);
-	pass = pass && !memcmp(hash2, buf, SHA256_BLOCK_SIZE);
-
+	passed = passed && !memcmp(hash2, buf, SHA256_BLOCK_SIZE);
+	printf("\noutput: ");
+	for(i = 0; i < SHA256_BLOCK_SIZE; i++)
+    printf("%02X", *(buf + i));
+  printf("\n");
+  //--
+  printf("[TEST %d]\ninput : %s", nb++, text3);
 	sha256_init(&ctx);
-	for (idx = 0; idx < 100000; ++idx)
+	for (i = 0; i < 100000; ++i)
 	   sha256_update(&ctx, text3, strlen(text3));
 	sha256_final(&ctx, buf);
-	pass = pass && !memcmp(hash3, buf, SHA256_BLOCK_SIZE);
+	passed = passed && !memcmp(hash3, buf, SHA256_BLOCK_SIZE);
+	printf("\noutput: ");
+	for(i = 0; i < SHA256_BLOCK_SIZE; i++)
+    printf("%02X", *(buf + i));
+  printf("\n\n");
+  //--
 
-	return(pass);
+	return(passed);
 }
 
 int main()
 {
-	printf("SHA-256 tests: %s\n", sha256_test() ? "SUCCEEDED" : "FAILED");
+	printf("SHA-256 tests: %s\n", sha256_test() ? C_GREEN"SUCCEEDED"C_OFF : C_RED"FAILED"C_OFF);
 
 	return(0);
 }

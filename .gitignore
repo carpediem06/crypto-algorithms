@@ -1,0 +1,11 @@
+AES/aes
+BASE64/base64
+DES/des
+MD2/md2
+MD/md5
+RTT13/rot13
+SHA1/sha1
+SHA256/sha256
+ARC4/arc
+blowfish/blowfish
+
